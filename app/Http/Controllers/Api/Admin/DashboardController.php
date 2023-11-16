@@ -8,6 +8,8 @@ use App\Models\Aparatur;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Kerontang;
+use App\Models\Sholawat;
 
 class DashboardController extends Controller
 {
@@ -28,6 +30,10 @@ class DashboardController extends Controller
         //count aparaturs
         $aparaturs = Aparatur::count();
 
+        //count sholawats
+        $sholawats = Sholawat::count();
+        $kerontangs = Kerontang::count();
+
         //return response json
         return response()->json([
             'success'   => true,
@@ -37,6 +43,8 @@ class DashboardController extends Controller
                 'posts'      => $posts,
                 'products'   => $products,
                 'aparaturs'  => $aparaturs,
+                'sholawats'  => $sholawats,
+                'kerontangs'  => $kerontangs,
             ]
         ]);
     }
