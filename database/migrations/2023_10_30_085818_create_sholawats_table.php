@@ -17,7 +17,6 @@ return new class extends Migration
             $table->foreignId('user_id')->references('id')->on('users')->cascadeOnDelete();
             $table->string('title');
             $table->string('slug');
-            $table->string('image');
             $table->text('content');
             $table->timestamps();
         });

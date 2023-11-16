@@ -20,15 +20,15 @@ class KerontangController extends Controller
      */
     public function index()
     {
-        $posts = Kerontang::with('user', 'category')->when(request()->search, function ($posts) {
-            $posts = $posts->where('title', 'like', '%' . request()->search . '%');
+        $kerontangs = Kerontang::with('user', 'category')->when(request()->search, function ($kerontangs) {
+            $kerontangs = $kerontangs->where('title', 'like', '%' . request()->search . '%');
         })->where('user_id', auth()->user()->id)->latest()->paginate(5);
 
         //append query string to pagination links
-        $posts->appends(['search' => request()->search]);
+        $kerontangs->appends(['search' => request()->search]);
 
         //return with Api Resource
-        return new KerontangResource(true, 'List Data Posts', $posts);
+        return new KerontangResource(true, 'List Data Kerontangs', $kerontangs);
     }
 
     /**
@@ -40,7 +40,7 @@ class KerontangController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'image'         => 'required|image|mimes:jpeg,jpg,png|max:2000',
+            // 'image'         => 'required|image|mimes:jpeg,jpg,png|max:2000',
             'title'         => 'required|unique:kerontangs',
             'category_id'   => 'required',
             'content'       => 'required'
@@ -51,11 +51,11 @@ class KerontangController extends Controller
         }
 
         //upload image
-        $image = $request->file('image');
-        $image->storeAs('public/kerontangs', $image->hashName());
+        // $image = $request->file('image');
+        // $image->storeAs('public/kerontangs', $image->hashName());
 
-        $post = Kerontang::create([
-            'image'       => $image->hashName(),
+        $kerontang = Kerontang::create([
+            // 'image'       => $image->hashName(),
             'title'       => $request->title,
             'slug'        => Str::slug($request->title, '-'),
             'category_id' => $request->category_id,
@@ -64,9 +64,9 @@ class KerontangController extends Controller
         ]);
 
 
-        if ($post) {
+        if ($kerontang) {
             //return success with Api Resource
-            return new KerontangResource(true, 'Data Kerontang Berhasil Disimpan!', $post);
+            return new KerontangResource(true, 'Data Kerontang Berhasil Disimpan!', $kerontang);
         }
 
         //return failed with Api Resource
@@ -81,15 +81,15 @@ class KerontangController extends Controller
      */
     public function show($id)
     {
-        $post = Kerontang::with('category')->whereId($id)->first();
+        $kerontang = Kerontang::with('category')->whereId($id)->first();
 
-        if ($post) {
+        if ($kerontang) {
             //return success with Api Resource
-            return new KerontangResource(true, 'Detail Data Post!', $post);
+            return new KerontangResource(true, 'Detail Data Kerontang!', $kerontang);
         }
 
         //return failed with Api Resource
-        return new KerontangResource(false, 'Detail Data Post Tidak DItemukan!', null);
+        return new KerontangResource(false, 'Detail Data Kerontang Tidak DItemukan!', null);
     }
 
     /**
@@ -99,10 +99,10 @@ class KerontangController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $request, Kerontang $kerontang)
     {
         $validator = Validator::make($request->all(), [
-            'title'         => 'required|unique:kerontangs,title,' . $post->id,
+            'title'         => 'required|unique:kerontangs,title,' . $kerontang->id,
             'category_id'   => 'required',
             'content'       => 'required'
         ]);
@@ -112,26 +112,26 @@ class KerontangController extends Controller
         }
 
         //check image update
-        if ($request->file('image')) {
+        // if ($request->file('image')) {
 
-            //remove old image
-            Storage::disk('local')->delete('public/kerontangs/' . basename($post->image));
+        //     //remove old image
+        //     Storage::disk('local')->delete('public/kerontangs/' . basename($post->image));
 
-            //upload new image
-            $image = $request->file('image');
-            $image->storeAs('public/kerontangs', $image->hashName());
+        //     //upload new image
+        //     $image = $request->file('image');
+        //     $image->storeAs('public/kerontangs', $image->hashName());
 
-            $post->update([
-                'image'       => $image->hashName(),
-                'title'       => $request->title,
-                'slug'        => Str::slug($request->title, '-'),
-                'category_id' => $request->category_id,
-                'user_id'     => auth()->guard('api')->user()->id,
-                'content'     => $request->content
-            ]);
-        }
+        //     $post->update([
+        //         'image'       => $image->hashName(),
+        //         'title'       => $request->title,
+        //         'slug'        => Str::slug($request->title, '-'),
+        //         'category_id' => $request->category_id,
+        //         'user_id'     => auth()->guard('api')->user()->id,
+        //         'content'     => $request->content
+        //     ]);
+        // }
 
-        $post->update([
+        $kerontang->update([
             'title'       => $request->title,
             'slug'        => Str::slug($request->title, '-'),
             'category_id' => $request->category_id,
@@ -139,9 +139,9 @@ class KerontangController extends Controller
             'content'     => $request->content
         ]);
 
-        if ($post) {
+        if ($kerontang) {
             //return success with Api Resource
-            return new KerontangResource(true, 'Data Kerontang Berhasil Diupdate!', $post);
+            return new KerontangResource(true, 'Data Kerontang Berhasil Diupdate!', $kerontang);
         }
 
         //return failed with Api Resource
@@ -154,12 +154,12 @@ class KerontangController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Post $post)
+    public function destroy(Kerontang $kerontang)
     {
         //remove image
-        Storage::disk('local')->delete('public/kerontangs/' . basename($post->image));
+        // Storage::disk('local')->delete('public/kerontangs/' . basename($post->image));
 
-        if ($post->delete()) {
+        if ($kerontang->delete()) {
             //return success with Api Resource
             return new KerontangResource(true, 'Data Kerontang Berhasil Dihapus!', null);
         }

@@ -22,15 +22,15 @@ class SholawatController extends Controller
      */
     public function index()
     {
-        $posts = Sholawat::with('user', 'category')->when(request()->search, function ($posts) {
-            $posts = $posts->where('title', 'like', '%' . request()->search . '%');
+        $sholawats = Sholawat::with('user', 'category')->when(request()->search, function ($sholawats) {
+            $sholawats = $sholawats->where('title', 'like', '%' . request()->search . '%');
         })->where('user_id', auth()->user()->id)->latest()->paginate(5);
 
         //append query string to pagination links
-        $posts->appends(['search' => request()->search]);
+        $sholawats->appends(['search' => request()->search]);
 
         //return with Api Resource
-        return new SholawatResource(true, 'List Data Posts', $posts);
+        return new SholawatResource(true, 'List Data Posts', $sholawats);
     }
 
     /**
@@ -42,7 +42,7 @@ class SholawatController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'image'         => 'required|image|mimes:jpeg,jpg,png|max:2000',
+            // 'image'         => 'required|image|mimes:jpeg,jpg,png|max:2000',
             'title'         => 'required|unique:sholawats',
             'category_id'   => 'required',
             'content'       => 'required'
@@ -53,11 +53,11 @@ class SholawatController extends Controller
         }
 
         //upload image
-        $image = $request->file('image');
-        $image->storeAs('public/sholawats', $image->hashName());
+        // $image = $request->file('image');
+        // $image->storeAs('public/sholawats', $image->hashName());
 
-        $post = Sholawat::create([
-            'image'       => $image->hashName(),
+        $sholawat = Sholawat::create([
+            // 'image'       => $image->hashName(),
             'title'       => $request->title,
             'slug'        => Str::slug($request->title, '-'),
             'category_id' => $request->category_id,
@@ -66,9 +66,9 @@ class SholawatController extends Controller
         ]);
 
 
-        if ($post) {
+        if ($sholawat) {
             //return success with Api Resource
-            return new SholawatResource(true, 'Data Sholawat Berhasil Disimpan!', $post);
+            return new SholawatResource(true, 'Data Sholawat Berhasil Disimpan!', $sholawat);
         }
 
         //return failed with Api Resource
@@ -83,11 +83,11 @@ class SholawatController extends Controller
      */
     public function show($id)
     {
-        $post = Sholawat::with('category')->whereId($id)->first();
+        $sholawat = Sholawat::with('category')->whereId($id)->first();
 
-        if ($post) {
+        if ($sholawat) {
             //return success with Api Resource
-            return new SholawatResource(true, 'Detail Data Sholawat!', $post);
+            return new SholawatResource(true, 'Detail Data Sholawat!', $sholawat);
         }
 
         //return failed with Api Resource
@@ -101,10 +101,10 @@ class SholawatController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $request, Sholawat $sholawat)
     {
         $validator = Validator::make($request->all(), [
-            'title'         => 'required|unique:sholawats,title,' . $post->id,
+            'title'         => 'required|unique:sholawats,title,' . $sholawat->id,
             'category_id'   => 'required',
             'content'       => 'required'
         ]);
@@ -114,26 +114,26 @@ class SholawatController extends Controller
         }
 
         //check image update
-        if ($request->file('image')) {
+        // if ($request->file('image')) {
 
-            //remove old image
-            Storage::disk('local')->delete('public/sholawats/' . basename($post->image));
+        //     //remove old image
+        //     Storage::disk('local')->delete('public/sholawats/' . basename($sholawat->image));
 
-            //upload new image
-            $image = $request->file('image');
-            $image->storeAs('public/sholawats', $image->hashName());
+        //     //upload new image
+        //     $image = $request->file('image');
+        //     $image->storeAs('public/sholawats', $image->hashName());
 
-            $post->update([
-                'image'       => $image->hashName(),
-                'title'       => $request->title,
-                'slug'        => Str::slug($request->title, '-'),
-                'category_id' => $request->category_id,
-                'user_id'     => auth()->guard('api')->user()->id,
-                'content'     => $request->content
-            ]);
-        }
+        //     $sholawat->update([
+        //         'image'       => $image->hashName(),
+        //         'title'       => $request->title,
+        //         'slug'        => Str::slug($request->title, '-'),
+        //         'category_id' => $request->category_id,
+        //         'user_id'     => auth()->guard('api')->user()->id,
+        //         'content'     => $request->content
+        //     ]);
+        // }
 
-        $post->update([
+        $sholawat->update([
             'title'       => $request->title,
             'slug'        => Str::slug($request->title, '-'),
             'category_id' => $request->category_id,
@@ -141,9 +141,9 @@ class SholawatController extends Controller
             'content'     => $request->content
         ]);
 
-        if ($post) {
+        if ($sholawat) {
             //return success with Api Resource
-            return new SholawatResource(true, 'Data Sholawat Berhasil Diupdate!', $post);
+            return new SholawatResource(true, 'Data Sholawat Berhasil Diupdate!', $sholawat);
         }
 
         //return failed with Api Resource
@@ -156,12 +156,12 @@ class SholawatController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Post $post)
+    public function destroy(Sholawat $sholawat)
     {
         //remove image
-        Storage::disk('local')->delete('public/sholawats/' . basename($post->image));
+        // Storage::disk('local')->delete('public/sholawats/' . basename($sholawat->image));
 
-        if ($post->delete()) {
+        if ($sholawat->delete()) {
             //return success with Api Resource
             return new SholawatResource(true, 'Data Sholawat Berhasil Dihapus!', null);
         }

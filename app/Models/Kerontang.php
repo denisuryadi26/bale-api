@@ -16,7 +16,12 @@ class Kerontang extends Model
      * @var array
      */
     protected $fillable = [
-        'title', 'slug', 'category_id', 'user_id', 'content', 'image'
+        'title',
+        'slug',
+        'category_id',
+        'user_id',
+        'content'
+        // 'image'
     ];
 
     /**
