@@ -50,7 +50,7 @@ class SholawatController extends Controller
      */
     public function homePage()
     {
-        $posts = Post::with('user', 'category')->latest()->take(6)->get();
+        $posts = Sholawat::with('user', 'category')->latest()->take(6)->get();
 
         //return with Api Resource
         return new SholawatResource(true, 'List Data Post HomePage', $posts);

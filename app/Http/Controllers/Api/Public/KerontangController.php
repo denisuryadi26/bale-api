@@ -49,7 +49,7 @@ class KerontangController extends Controller
      */
     public function homePage()
     {
-        $posts = Post::with('user', 'category')->latest()->take(6)->get();
+        $posts = Kerontang::with('user', 'category')->latest()->take(6)->get();
 
         //return with Api Resource
         return new KerontangResource(true, 'List Data Post HomePage', $posts);
