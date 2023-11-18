@@ -32,15 +32,15 @@ class SholawatController extends Controller
      */
     public function show($slug)
     {
-        $post = Post::with('user', 'category')->where('slug', $slug)->first();
+        $post = Sholawat::with('user', 'category')->where('slug', $slug)->first();
 
         if ($post) {
             //return with Api Resource
-            return new SholawatResource(true, 'Detail Data Post', $post);
+            return new SholawatResource(true, 'Detail Data Sholawat', $post);
         }
 
         //return with Api Resource
-        return new SholawatResource(false, 'Detail Data Post Tidak Ditemukan!', null);
+        return new SholawatResource(false, 'Detail Data Sholawat Tidak Ditemukan!', null);
     }
 
     /**

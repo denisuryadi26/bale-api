@@ -31,15 +31,15 @@ class KerontangController extends Controller
      */
     public function show($slug)
     {
-        $post = Post::with('user', 'category')->where('slug', $slug)->first();
+        $post = Kerontang::with('user', 'category')->where('slug', $slug)->first();
 
         if ($post) {
             //return with Api Resource
-            return new KerontangResource(true, 'Detail Data Post', $post);
+            return new KerontangResource(true, 'Detail Data Kerontang', $post);
         }
 
         //return with Api Resource
-        return new KerontangResource(false, 'Detail Data Post Tidak Ditemukan!', null);
+        return new KerontangResource(false, 'Detail Data Kerontang Tidak Ditemukan!', null);
     }
 
     /**
