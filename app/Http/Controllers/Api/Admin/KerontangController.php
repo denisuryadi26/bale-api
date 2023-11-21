@@ -20,9 +20,18 @@ class KerontangController extends Controller
      */
     public function index()
     {
-        $kerontangs = Kerontang::with('user', 'category')->when(request()->search, function ($kerontangs) {
-            $kerontangs = $kerontangs->where('title', 'like', '%' . request()->search . '%');
-        })->where('user_id', auth()->user()->id)->latest()->paginate(5);
+        if (auth()->user()->id == 1) {
+            $kerontangs = Kerontang::with('user', 'category')->when(request()->search, function ($kerontangs) {
+                $kerontangs = $kerontangs->where('title', 'like', '%' . request()->search . '%');
+            })->latest()->paginate(5);
+        } else {
+            $kerontangs = Kerontang::with('user', 'category')->when(request()->search, function ($kerontangs) {
+                $kerontangs = $kerontangs->where('title', 'like', '%' . request()->search . '%');
+            })->where('user_id', auth()->user()->id)->latest()->paginate(5);
+        }
+        // $kerontangs = Kerontang::with('user', 'category')->when(request()->search, function ($kerontangs) {
+        //     $kerontangs = $kerontangs->where('title', 'like', '%' . request()->search . '%');
+        // })->where('user_id', auth()->user()->id)->latest()->paginate(5);
 
         //append query string to pagination links
         $kerontangs->appends(['search' => request()->search]);

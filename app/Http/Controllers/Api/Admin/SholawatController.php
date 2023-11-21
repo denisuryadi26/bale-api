@@ -22,15 +22,24 @@ class SholawatController extends Controller
      */
     public function index()
     {
-        $sholawats = Sholawat::with('user', 'category')->when(request()->search, function ($sholawats) {
-            $sholawats = $sholawats->where('title', 'like', '%' . request()->search . '%');
-        })->where('user_id', auth()->user()->id)->latest()->paginate(5);
+        if (auth()->user()->id == 1) {
+            $sholawats = Sholawat::with('user', 'category')->when(request()->search, function ($sholawats) {
+                $sholawats = $sholawats->where('title', 'like', '%' . request()->search . '%');
+            })->latest()->paginate(5);
+        } else {
+            $sholawats = Sholawat::with('user', 'category')->when(request()->search, function ($sholawats) {
+                $sholawats = $sholawats->where('title', 'like', '%' . request()->search . '%');
+            })->where('user_id', auth()->user()->id)->latest()->paginate(5);
+        }
+        // $sholawats = Sholawat::with('user', 'category')->when(request()->search, function ($sholawats) {
+        //     $sholawats = $sholawats->where('title', 'like', '%' . request()->search . '%');
+        // })->where('user_id', auth()->user()->id)->latest()->paginate(5);
 
         //append query string to pagination links
         $sholawats->appends(['search' => request()->search]);
 
         //return with Api Resource
-        return new SholawatResource(true, 'List Data Posts', $sholawats);
+        return new SholawatResource(true, 'List Data Sholawats', $sholawats);
     }
 
     /**
