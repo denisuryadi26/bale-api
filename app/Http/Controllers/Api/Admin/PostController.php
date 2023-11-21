@@ -19,9 +19,18 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::with('user', 'category')->when(request()->search, function ($posts) {
-            $posts = $posts->where('title', 'like', '%' . request()->search . '%');
-        })->where('user_id', auth()->user()->id)->latest()->paginate(5);
+        if (auth()->user()->id == 1) {
+            $posts = Post::with('user', 'category')->when(request()->search, function ($posts) {
+                $posts = $posts->where('title', 'like', '%' . request()->search . '%');
+            })->latest()->paginate(5);
+        } else {
+            $posts = Post::with('user', 'category')->when(request()->search, function ($posts) {
+                $posts = $posts->where('title', 'like', '%' . request()->search . '%');
+            })->where('user_id', auth()->user()->id)->latest()->paginate(5);
+        }
+        // $posts = Post::with('user', 'category')->when(request()->search, function ($posts) {
+        //     $posts = $posts->where('title', 'like', '%' . request()->search . '%');
+        // })->where('user_id', auth()->user()->id)->latest()->paginate(5);
 
         //append query string to pagination links
         $posts->appends(['search' => request()->search]);
