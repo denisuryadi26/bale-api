@@ -114,6 +114,9 @@ Route::prefix('public')->group(function () {
     //index sholawats
     Route::get('/sholawats', [App\Http\Controllers\Api\Public\SholawatController::class, 'index']);
 
+    //index sholawats
+    Route::get('/sholawats/all', [App\Http\Controllers\Api\Public\SholawatController::class, 'all']);
+
     //show sholawats
     Route::get('/sholawats/{slug}', [App\Http\Controllers\Api\Public\SholawatController::class, 'show']);
 
@@ -122,6 +125,9 @@ Route::prefix('public')->group(function () {
 
     //index kerontangs
     Route::get('/kerontangs', [App\Http\Controllers\Api\Public\KerontangController::class, 'index']);
+
+    //index kerontangs
+    Route::get('/kerontangs/all', [App\Http\Controllers\Api\Public\KerontangController::class, 'all']);
 
     //show kerontangs
     Route::get('/kerontangs/{slug}', [App\Http\Controllers\Api\Public\KerontangController::class, 'show']);

@@ -20,7 +20,20 @@ class KerontangController extends Controller
         $posts = Kerontang::with('user', 'category')->latest()->paginate(10);
 
         //return with Api Resource
-        return new KerontangResource(true, 'List Data Posts', $posts);
+        return new KerontangResource(true, 'List Data Kerontang', $posts);
+    }
+
+    /**
+     * index
+     *
+     * @return void
+     */
+    public function all()
+    {
+        $posts = Kerontang::with('user', 'category')->get();
+
+        //return with Api Resource
+        return new KerontangResource(true, 'List Data Kerontang', $posts);
     }
 
     /**

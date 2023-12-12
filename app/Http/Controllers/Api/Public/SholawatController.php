@@ -21,7 +21,20 @@ class SholawatController extends Controller
         $posts = Sholawat::with('user', 'category')->latest()->paginate(10);
 
         //return with Api Resource
-        return new SholawatResource(true, 'List Data Posts', $posts);
+        return new SholawatResource(true, 'List Data Sholawat', $posts);
+    }
+
+    /**
+     * index
+     *
+     * @return void
+     */
+    public function all()
+    {
+        $posts = Sholawat::with('user', 'category')->get();
+
+        //return with Api Resource
+        return new SholawatResource(true, 'List Data Sholawat', $posts);
     }
 
     /**
